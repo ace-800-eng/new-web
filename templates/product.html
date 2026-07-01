@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Orbit{% endblock %}
+
+{% block content %}
+
+<section class="pdp-hero" style="background:{{ product.gradient }}">
+  <p class="pdp-eyebrow">{{ product.category }}</p>
+  <h1 class="pdp-title">{{ product.name }}</h1>
+  <p class="pdp-tagline">{{ product.tagline }}</p>
+  <span class="pdp-emoji">{{ product.hero_emoji }}</span>
+</section>
+
+<section class="pdp-body">
+  <div class="pdp-buy-panel">
+    <h2 class="pdp-price">${{ "{:,}".format(product.price) }}</h2>
+    <p class="pdp-desc">{{ product.description }}</p>
+
+    <div class="pdp-colors">
+      <p class="pdp-label">Available finishes</p>
+      <div class="color-chip-row">
+        {% for color in product.color_options %}
+        <span class="color-chip">{{ color }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+      <button type="submit" class="btn-primary">Add to Bag</button>
+    </form>
+    <a href="{{ url_for('index') }}" class="btn-link">&larr; Continue shopping</a>
+  </div>
+
+  <div class="pdp-specs-panel">
+    <p class="pdp-label">Highlights</p>
+    <ul class="specs-list">
+      {% for spec in product.specs %}
+      <li>{{ spec }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% endblock %}

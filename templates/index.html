@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Orbit — Store{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <p class="hero-eyebrow">Orbit Store</p>
+  <h1 class="hero-title">The whole lineup.<br>All in one place.</h1>
+  <p class="hero-sub">Shop the latest Orbit products, with free delivery and easy returns.</p>
+</section>
+
+{% set categories = [] %}
+{% for p in products %}
+  {% if p.category not in categories %}{% set _ = categories.append(p.category) %}{% endif %}
+{% endfor %}
+
+{% for cat in categories %}
+<section class="category-row" id="{{ cat|lower }}">
+  <h2 class="category-title">{{ cat }}</h2>
+  <div class="product-grid">
+    {% for product in products if product.category == cat %}
+    <a class="product-card" href="{{ url_for('product_detail', product_id=product.id) }}">
+      <div class="product-card-visual" style="background:{{ product.gradient }}">
+        <span class="product-card-emoji">{{ product.hero_emoji }}</span>
+      </div>
+      <div class="product-card-info">
+        <h3>{{ product.name }}</h3>
+        <p class="product-card-tagline">{{ product.tagline }}</p>
+        <p class="product-card-price">From ${{ "{:,}".format(product.price) }}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+
+{% endblock %}

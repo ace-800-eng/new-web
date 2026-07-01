@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Bag — Orbit{% endblock %}
+
+{% block content %}
+
+<section class="cart-page">
+  <h1 class="cart-title">Bag</h1>
+
+  {% if items %}
+    <div class="cart-list">
+      {% for item in items %}
+      <div class="cart-item">
+        <div class="cart-item-visual" style="background:{{ item.gradient }}">
+          <span>{{ item.hero_emoji }}</span>
+        </div>
+        <div class="cart-item-info">
+          <h3>{{ item.name }}</h3>
+          <p class="cart-item-meta">Quantity: {{ item.qty }}</p>
+          <div class="cart-item-actions">
+            <form action="{{ url_for('decrease_qty', product_id=item.id) }}" method="POST">
+              <button type="submit" class="btn-link">Remove one</button>
+            </form>
+            <form action="{{ url_for('remove_from_cart', product_id=item.id) }}" method="POST">
+              <button type="submit" class="btn-link">Remove all</button>
+            </form>
+          </div>
+        </div>
+        <div class="cart-item-price">${{ "{:,}".format(item.line_total) }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+      <div class="cart-summary-row">
+        <span>Total</span>
+        <span>${{ "{:,}".format(total) }}</span>
+      </div>
+      <form action="{{ url_for('checkout') }}" method="POST">
+        <button type="submit" class="btn-primary btn-wide">Check Out</button>
+      </form>
+    </div>
+  {% else %}
+    <p class="cart-empty">Your bag is empty.</p>
+    <a href="{{ url_for('index') }}" class="btn-link">&larr; Continue shopping</a>
+  {% endif %}
+</section>
+
+{% endblock %}

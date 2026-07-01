@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — Orbit{% endblock %}
+
+{% block content %}
+<section class="confirm-page">
+  <span class="confirm-check">✓</span>
+  <h1>Thank you.</h1>
+  <p class="confirm-sub">Your order is confirmed and on its way.</p>
+  <a href="{{ url_for('index') }}" class="btn-primary">Back to Store</a>
+</section>
+{% endblock %}

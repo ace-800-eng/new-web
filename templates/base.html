@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Orbit{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="{{ url_for('index') }}" class="nav-logo">◎ orbit</a>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('index') }}#phone">Phone</a></li>
+      <li><a href="{{ url_for('index') }}#laptop">Laptop</a></li>
+      <li><a href="{{ url_for('index') }}#watch">Watch</a></li>
+      <li><a href="{{ url_for('index') }}#audio">Audio</a></li>
+      <li><a href="{{ url_for('index') }}#tablet">Tablet</a></li>
+    </ul>
+    <a href="{{ url_for('view_cart') }}" class="nav-cart" aria-label="View bag">
+      Bag
+      {% if cart_count and cart_count > 0 %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+    </a>
+  </div>
+</nav>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-note">
+      More ways to shop: find a store near you, or call 1-800-ORBIT-01.
+    </p>
+    <hr>
+    <p class="footer-copy">Copyright &copy; 2026 Orbit Inc. All rights reserved. This is a demo storefront, not a real company.</p>
+  </div>
+</footer>
+
+</body>
+</html>
