@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    container_name: orbit-store-web
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-change-this-in-a-.env-file}
+    restart: unless-stopped
