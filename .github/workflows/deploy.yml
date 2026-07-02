@@ -1,61 +1,20 @@
-name: Deploy to AWS Elastic Beanstalk
+name: Deploy to EC2
 
 on:
   push:
-    branches: [master]
-
-env:
-  EB_APPLICATION_NAME: orbit-store
-  EB_ENVIRONMENT_NAME: orbit-store-env
-  AWS_REGION: us-east-1
+    branches: [main]     # change this to "master" if that's what step 1 showed
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Smoke-test the app boots
-        run: |
-          python -c "
-          import app as a
-          client = a.app.test_client()
-          r = client.get('/')
-          assert r.status_code == 200, f'Home page failed: {r.status_code}'
-          print('App boots and serves the homepage OK')
-          "
-
   deploy:
-    needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Zip application
-        run: zip -r deploy.zip . -x "*.git*" ".github/*"
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v22
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ${{ env.EB_APPLICATION_NAME }}
-          environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
-          region: ${{ env.AWS_REGION }}
-          version_label: "gh-${{ github.run_number }}"
-          deployment_package: deploy.zip
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/new-web || git clone https://github.com/ace-800-eng/new-web.git ~/new-web && cd ~/new-web
+            git pull origin main
+            docker compose up -d --build
