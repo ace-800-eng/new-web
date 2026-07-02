@@ -2,7 +2,7 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [master]     # change this to "master" if that's what step 1 showed
+    branches: [master]
 
 jobs:
   deploy:
@@ -16,5 +16,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/new-web || git clone https://github.com/ace-800-eng/new-web.git ~/new-web && cd ~/new-web
-            git pull origin main
-            docker compose up -d --build
+            git pull origin master
+            sudo docker compose up -d --build
